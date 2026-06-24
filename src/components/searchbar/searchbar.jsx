@@ -1,5 +1,5 @@
 import React from 'react';
-import './searchbar.css'; // ملف الـ CSS الخاص بالكومبوننت اللي عملتيه
+import './searchbar.css'; 
 
 const SearchBar = ({ city, setCity, onSubmit }) => {
   return (
