@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { useSearchParams, Link } from 'react-router-dom'; // 👈 ضفنا Link هنا
+import { useSearchParams, Link } from 'react-router-dom'; 
 import { getWeatherData } from '../../services/weatherapi';
+import { getCityImage } from '../../services/imgapi'; 
 import './weather.css';
 
 const Weather = () => {
@@ -11,24 +12,26 @@ const Weather = () => {
   const [loading, setLoading] = useState(true);
   const [lastUpdatedTime, setLastUpdatedTime] = useState("");
   
-// State مخصصة لخلفية الكارت ديناميكيًا بناءً على اسم المدينة
-  const [cityImage, setCityImage] = useState('https://images.unsplash.com/photo-1596895111956-bf1cf0599ce5?q=80&w=600'); 
+  // 👈 هذا هو السطر الذي كان ناقصاً وتسبب في الإيرور (تعريف الـ State وصورتها المبدئية)
+  const [cityImage, setCityImage] = useState('https://images.unsplash.com/photo-1504608524841-42fe6f032b4b?auto=format&fit=crop&w=600&q=80'); 
 
-  useEffect(() => {
+ useEffect(() => {
     const fetchWeather = async () => {
       try {
         setLoading(true);
         const cleanedCity = cityQuery.trim().toLowerCase();
         const formattedCity = cleanedCity.charAt(0).toUpperCase() + cleanedCity.slice(1);
         
+        // 1. جلب بيانات الطقس
         const data = await getWeatherData(formattedCity);
         setWeatherData(data);
         
-        // 1. تحديث الصورة بنجاح هنا جوة الـ try
-        setCityImage(`https://loremflickr.com/600/400/${encodeURIComponent(cleanedCity)},city,building/all`);
+        // 2. جلب الصورة الحقيقية الاحترافية ديناميكياً من السيرفيس الجديدة 🌟
+        const imageUrl = await getCityImage(formattedCity);
+        setCityImage(imageUrl);
         
         setLastUpdatedTime(new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true }));
-      } catch (err) { // 👈 الـ catch هنا رجعت لأصلها المظبوط
+      } catch (err) {
         console.log("Using smart mock data for presentation safety.");
         const cleanedCity = cityQuery.trim().toLowerCase();
         const formattedCity = cleanedCity.charAt(0).toUpperCase() + cleanedCity.slice(1);
@@ -42,8 +45,9 @@ const Weather = () => {
           weather: [{ description: 'Clear Sky' }]
         });
         
-        // 2. تحديث الصورة هنا برضه جوة الـ catch للاحتياط
-        setCityImage(`https://loremflickr.com/600/400/${encodeURIComponent(cleanedCity)},city,building/all`);
+        // حتى في الـ catch هيروح يجيب الصورة صح من السيرفيس
+        const imageUrl = await getCityImage(formattedCity);
+        setCityImage(imageUrl);
         
         setLastUpdatedTime("01:30 PM (Preview)");
       } finally {
@@ -53,7 +57,7 @@ const Weather = () => {
 
     fetchWeather();
   }, [cityQuery]);
-
+  
   if (loading) return <div className="loader-screen"><div className="spinner"></div><p>Loading Dashboard...</p></div>;
 
   const formatTime = (timestamp) => {
@@ -123,7 +127,9 @@ const Weather = () => {
           
           {/* الـ Header مع إضافة زر الانتقال للبيدج التالتة */}
           <div className="main-header">
-            <h2 className="section-title shimmer-text">Today's Highlights</h2>
+            <h2 className="section-title shimmer-text">
+  Today's Highlights in {weatherData.name}, {weatherData.sys.country}
+</h2>
             
             <div className="header-controls-wrapper" style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
               

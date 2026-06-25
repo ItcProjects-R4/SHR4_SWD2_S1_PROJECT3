@@ -13,7 +13,6 @@ const Home = () => {
       navigate(`/weather?city=${encodeURIComponent(city)}`);
     }
   };
-
   return (
     <div className="home-container">
       {/* الـ Navbar */}
