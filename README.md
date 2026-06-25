@@ -56,7 +56,7 @@ Weatherly is a fully responsive and modern web application dedicated to displayi
 ## 📸 Screenshots
 | Landing Page (Home) | Weather Dashboard | 5-Day Forecast |
 |---|---|---|
-| <img src="./weather_app/src/assets/home_ss.png" width="100%" alt="Home Screen"/> | <img src="./weather_app/src/assets/weather_ss.png" width="100%" alt="Dashboard Screen"/> | <img src="./weather_app/src/assets/forecast_ss.png" width="100%" alt="Forecast Screen"/> |
+| <img src="./src/assets/home_ss.png" width="100%" alt="Home Screen"/> | <img src="./src/assets/weather_ss.png" width="100%" alt="Dashboard Screen"/> | <img src="./src/assets/forcast_ss.png" width="100%" alt="Forecast Screen"/> |
 
 ---
 ## 🛠️ Challenges & Solutions
