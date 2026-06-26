@@ -20,8 +20,6 @@ const Home = () => {
         </div>
         <ul className="nav-links">
           <li><Link to="/">Home</Link></li>
-          <li><Link to="/today">Today</Link></li>
-          <li><Link to="/week">Week</Link></li>
         </ul>
       </nav>
       <div className="clouds-layer">
