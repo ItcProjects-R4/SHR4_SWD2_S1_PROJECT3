@@ -7,12 +7,9 @@ import './weather.css';
 const Weather = () => {
   const [searchParams] = useSearchParams();
   const cityQuery = searchParams.get('city') || 'Cairo';
-
   const [weatherData, setWeatherData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [lastUpdatedTime, setLastUpdatedTime] = useState("");
-  
-  // 👈 هذا هو السطر الذي كان ناقصاً وتسبب في الإيرور (تعريف الـ State وصورتها المبدئية)
   const [cityImage, setCityImage] = useState('https://images.unsplash.com/photo-1504608524841-42fe6f032b4b?auto=format&fit=crop&w=600&q=80'); 
 
  useEffect(() => {
@@ -21,21 +18,15 @@ const Weather = () => {
         setLoading(true);
         const cleanedCity = cityQuery.trim().toLowerCase();
         const formattedCity = cleanedCity.charAt(0).toUpperCase() + cleanedCity.slice(1);
-        
-        // 1. جلب بيانات الطقس
         const data = await getWeatherData(formattedCity);
         setWeatherData(data);
-        
-        // 2. جلب الصورة الحقيقية الاحترافية ديناميكياً من السيرفيس الجديدة 🌟
         const imageUrl = await getCityImage(formattedCity);
         setCityImage(imageUrl);
-        
         setLastUpdatedTime(new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true }));
       } catch (err) {
         console.log("Using smart mock data for presentation safety.");
         const cleanedCity = cityQuery.trim().toLowerCase();
         const formattedCity = cleanedCity.charAt(0).toUpperCase() + cleanedCity.slice(1);
-        
         setWeatherData({
           name: formattedCity,
           sys: { country: 'Global' },
@@ -44,8 +35,6 @@ const Weather = () => {
           visibility: 10000,
           weather: [{ description: 'Clear Sky' }]
         });
-        
-        // حتى في الـ catch هيروح يجيب الصورة صح من السيرفيس
         const imageUrl = await getCityImage(formattedCity);
         setCityImage(imageUrl);
         
@@ -54,26 +43,19 @@ const Weather = () => {
         setLoading(false);
       }
     };
-
     fetchWeather();
   }, [cityQuery]);
   
   if (loading) return <div className="loader-screen"><div className="spinner"></div><p>Loading Dashboard...</p></div>;
-
   const formatTime = (timestamp) => {
     if (!timestamp) return "06:30 AM";
     const date = new Date(timestamp * 1000);
     return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   };
-
   return (
     <div className="weather-page-container">
       <div className="weather-dashboard">
-        
-        {/* 1. الـ Sidebar الأيسر */}
         <div className="weather-sidebar animate-fade-in-left">
-          
-          {/* 👈 زرار سهم الباك الجديد في أول السايدبار */}
           <Link to="/" className="back-to-home-btn" title="Back to Home">
             <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
               <line x1="19" y1="12" x2="5" y2="12"></line>
@@ -122,10 +104,7 @@ const Weather = () => {
           </div>
         </div>
 
-        {/* 2. الجزء الأيمن الرئيسي */}
         <div className="weather-main-content animate-fade-in-right">
-          
-          {/* الـ Header مع إضافة زر الانتقال للبيدج التالتة */}
           <div className="main-header">
             <h2 className="section-title shimmer-text">
   Today's Highlights in {weatherData.name}, {weatherData.sys.country}
@@ -133,7 +112,6 @@ const Weather = () => {
             
             <div className="header-controls-wrapper" style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
               
-              {/* 👈 زرار السهم المتجه للبيدج الثالثة (Forecast) */}
               <Link to={`/forecast?city=${encodeURIComponent(cityQuery)}`} className="go-to-forecast-btn" title="View 5-Day Forecast">
                 <span>5-Day Forecast</span>
                 <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -150,8 +128,7 @@ const Weather = () => {
           </div>
 
           <div className="highlights-grid">
-            
-            {/* كارت 1: الضغط الجوي */}
+          
             <div className="highlight-card transition-card">
               <div className="card-header-with-icon">
                 <p className="card-label">Air Pressure</p>
@@ -164,7 +141,6 @@ const Weather = () => {
               <p className="card-sub-value">Standard Atmospheric</p>
             </div>
 
-            {/* كارت 2: Wind Speed */}
             <div className="highlight-card transition-card">
               <div className="card-header-with-icon">
                 <p className="card-label">Wind Speed</p>
@@ -173,8 +149,6 @@ const Weather = () => {
               <h3 className="card-value text-blue">{weatherData.wind.speed} <span className="value-unit">m/s</span></h3>
               <p className="card-sub-value">Direction: {weatherData.wind.deg}°🧭</p>
             </div>
-
-            {/* كارت 3: Sunrise & Sunset */}
             <div className="highlight-card transition-card">
               <div className="card-header-with-icon">
                 <p className="card-label">Sun Schedule</p>
@@ -193,7 +167,6 @@ const Weather = () => {
               </div>
             </div>
 
-            {/* كارت 4: Humidity */}
             <div className="highlight-card transition-card">
               <div className="card-header-with-icon">
                 <p className="card-label">Humidity</p>
@@ -203,7 +176,6 @@ const Weather = () => {
               <p className="card-sub-value">{weatherData.main.humidity > 60 ? 'High Moisture 🌧️' : 'Optimal Quality 👍'}</p>
             </div>
 
-            {/* كارت 5: Visibility */}
             <div className="highlight-card transition-card">
               <div className="card-header-with-icon">
                 <p className="card-label">Visibility</p>
@@ -213,7 +185,6 @@ const Weather = () => {
               <p className="card-sub-value">Atmospheric Clearness</p>
             </div>
 
-            {/* كارت 6: UV Radiation */}
             <div className="highlight-card">
               <div className="card-header-with-icon">
                 <p className="card-label">UV Radiation</p>
