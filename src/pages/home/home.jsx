@@ -6,7 +6,6 @@ import './home.css';
 const Home = () => {
   const [city, setCity] = useState('');
   const navigate = useNavigate();
-
   const handleSearchSubmit = (e) => {
     e.preventDefault();
     if (city.trim()) {
@@ -26,15 +25,12 @@ const Home = () => {
           <li><Link to="/week">Week</Link></li>
         </ul>
       </nav>
-      
-      {/* سحب واقعية حقيقية بطبقات سريعة وبطيئة عشان تدي عمق للمكان */}
       <div className="clouds-layer">
         <div className="pro-cloud pc1"></div>
         <div className="pro-cloud pc2"></div>
         <div className="pro-cloud pc3"></div>
         <div className="pro-cloud pc4"></div>
       </div>
-
       <div className="home-content">
         <h1 className="brand-title">Weatherly</h1>
         <p className="brand-subtitle">Check the weather anywhere in the world easily</p>
