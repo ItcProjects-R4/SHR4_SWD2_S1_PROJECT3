@@ -14,7 +14,6 @@ const Home = () => {
   };
   return (
     <div className="home-container">
-      {/* الـ Navbar */}
       <nav className="home-navbar">
         <div className="nav-logo">
           <Link to="/">Weatherly</Link>
