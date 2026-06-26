@@ -1,7 +1,5 @@
 import axios from 'axios';
-
 const PEXELS_API_KEY = 'jB6vfpsLK2F3JZfjFSXPSZB2k815eThAUWQBwNIyEY5NuXarlne0nTH1'; 
-
 export const getCityImage = async (cityName) => {
   try {
     const response = await axios.get(`https://api.pexels.com/v1/search`, {
@@ -15,7 +13,6 @@ export const getCityImage = async (cityName) => {
       }
     });
 
-   
     if (response.data.photos && response.data.photos.length > 0) {
       return response.data.photos[0].src.large; 
     }
