@@ -7,13 +7,11 @@ import './forcast.css';
 const Forecast = () => {
   const [searchParams] = useSearchParams();
   const cityQuery = searchParams.get('city') || 'Cairo';
-
   const [forecastList, setForecastList] = useState([]);
   const [chartData, setChartData] = useState([]);
   const [cityName, setCityName] = useState(cityQuery);
   const [loading, setLoading] = useState(true);
   const [isClient, setIsClient] = useState(false);
-
   useEffect(() => {
     setIsClient(true);
     const fetchForecast = async () => {
@@ -21,7 +19,6 @@ const Forecast = () => {
         setLoading(true);
         const data = await getForecastData(cityQuery.trim());
         setCityName(data.city.name);
-        
         const hourlyData = data.list.slice(0, 8).map(item => ({
           time: new Date(item.dt_txt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
           temp: Math.round(item.main.temp),
@@ -37,18 +34,14 @@ const Forecast = () => {
     };
     fetchForecast();
   }, [cityQuery]);
-
   const getDayName = (dateString) => new Date(dateString).toLocaleDateString('en-US', { weekday: 'long' });
-
   if (loading) return <div className="loader-screen">Loading...</div>;
-
   return (
     <div className="forecast-page-wrapper">
       <div className="forecast-header-nav">
         <Link to={`/weather?city=${cityQuery}`} className="back-to-dash-btn">← Back</Link>
         <h1>{cityName} 5-Day Forecast</h1>
       </div>
-
       <div className="forecast-cards-grid">
         {forecastList.map((day) => (
           <div key={day.dt} className="forecast-card-item">
@@ -65,7 +58,6 @@ const Forecast = () => {
           </div>
         ))}
       </div>
-
       <h3 className="chart-title">24-Hour Temperature Trend</h3>
       <div className="chart-container-wrapper" style={{ width: '100%', height: 260 }}>
         {isClient && chartData.length > 0 && (
@@ -89,5 +81,4 @@ const Forecast = () => {
     </div>
   );
 };
-
 export default Forecast;
